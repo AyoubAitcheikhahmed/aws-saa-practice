@@ -1,0 +1,67 @@
+[
+  {
+    "title": "SSE-S3 vs SSE-KMS vs client-side encryption",
+    "terms": ["SSE-S3", "SSE-KMS", "KMS", "client-side", "encrypt", "rotate", "audit"],
+    "hint": "SSE-S3: AWS owns/manages keys, no audit trail of key use. SSE-KMS: you control the key (policy, rotation, CloudTrail logging of usage). Client-side: data encrypted before upload; even AWS/DBAs can't read it."
+  },
+  {
+    "title": "SQS vs SNS vs Kinesis vs EventBridge",
+    "terms": ["SQS", "SNS", "Kinesis", "EventBridge", "queue", "fan", "stream", "order"],
+    "hint": "SQS = queue/buffer, one consumer per message, decoupling, DLQ. SNS = pub/sub fan-out push. Kinesis = ordered, replayable real-time stream, many consumers. EventBridge = event bus with rules, schedules, SaaS/AWS service events. FIFO (SQS/SNS) when order matters."
+  },
+  {
+    "title": "Multi-AZ vs Read Replica vs Aurora Global",
+    "terms": ["Multi-AZ", "read replica", "Aurora", "global database", "failover", "read", "report"],
+    "hint": "Multi-AZ = synchronous standby for HA/failover, not readable (instance deployment). Read replica = async copy to offload reads/reports, can be cross-Region. Aurora Global Database = cross-Region DR with <1s replication lag."
+  },
+  {
+    "title": "Gateway vs Interface VPC endpoint",
+    "terms": ["gateway endpoint", "interface endpoint", "VPC endpoint", "PrivateLink", "S3", "DynamoDB", "route table"],
+    "hint": "Gateway endpoint: only S3 and DynamoDB, free, added as a route-table target, not reachable from on-prem. Interface endpoint (PrivateLink): ENI with private IP in your subnet, most services, costs per hour/GB, reachable via VPN/Direct Connect."
+  },
+  {
+    "title": "NAT Gateway vs NAT instance vs Egress-only IGW",
+    "terms": ["NAT gateway", "NAT instance", "egress-only", "IPv6", "private subnet", "internet"],
+    "hint": "NAT gateway: managed, scales, AZ-scoped (one per AZ for HA), lives in a public subnet. NAT instance: self-managed EC2, legacy. Egress-only internet gateway: the IPv6 equivalent (outbound only)."
+  },
+  {
+    "title": "EFS vs FSx (Windows / Lustre / ONTAP) vs EBS",
+    "terms": ["EFS", "FSx", "Lustre", "Windows File Server", "ONTAP", "EBS", "SMB", "NFS", "HPC"],
+    "hint": "EFS: Linux NFS, shared across AZs, POSIX. FSx for Windows: SMB + Active Directory. FSx for Lustre: HPC, sub-ms, S3-linked. FSx for ONTAP: NFS + SMB multi-protocol, SnapMirror. EBS: block storage for one instance (io2 Multi-Attach is the exception, same AZ)."
+  },
+  {
+    "title": "Storage Gateway types",
+    "terms": ["Storage Gateway", "File Gateway", "Volume Gateway", "Tape Gateway", "cached", "stored", "iSCSI", "VTL"],
+    "hint": "S3 File Gateway: NFS/SMB → S3 objects (lifecycle-able). FSx File Gateway: low-latency cache for FSx Windows. Volume Gateway cached: data in S3, hot data local. Volume Gateway stored: full data local, async backup to S3. Tape Gateway: iSCSI VTL replacing physical tapes."
+  },
+  {
+    "title": "Spot vs Reserved vs Savings Plans vs On-Demand",
+    "terms": ["Spot", "Reserved", "Savings Plan", "On-Demand", "interrupt", "steady", "1-year", "3-year"],
+    "hint": "Spot: up to 90% off, can be interrupted (stateless/batch/fault-tolerant). Reserved Instances: steady 24/7 baseline, specific family. Compute Savings Plan: commitment in $/h, flexible across family/Region/Fargate/Lambda. On-Demand: short, unpredictable, no interruption."
+  },
+  {
+    "title": "DataSync vs Snow Family vs Transfer Family vs Storage Gateway",
+    "terms": ["DataSync", "Snowball", "Snowcone", "Transfer Family", "SFTP", "migrate", "bandwidth"],
+    "hint": "DataSync: online, scheduled/one-time bulk copy with bandwidth throttling + integrity checks. Snow Family: offline when bandwidth/time is too small (do the math: TB / Mbps). Transfer Family: SFTP/FTPS/AS2 endpoint into S3/EFS. Storage Gateway: ongoing hybrid access."
+  },
+  {
+    "title": "CloudFront vs Global Accelerator",
+    "terms": ["CloudFront", "Global Accelerator", "UDP", "static IP", "cache", "edge"],
+    "hint": "CloudFront: HTTP(S) caching CDN, signed URLs, geo restriction, Lambda@Edge. Global Accelerator: TCP/UDP, 2 static anycast IPs, fast regional failover, no caching."
+  },
+  {
+    "title": "Object Lock governance vs compliance vs legal hold vs Vault Lock",
+    "terms": ["Object Lock", "compliance mode", "governance", "legal hold", "Vault Lock", "WORM", "delete"],
+    "hint": "Compliance mode: nobody (not even root) can delete before retention ends. Governance: users with special permission can override. Legal hold: no expiry, removed with s3:PutObjectLegalHold. AWS Backup Vault Lock: WORM for backups."
+  },
+  {
+    "title": "CloudTrail vs Config vs CloudWatch",
+    "terms": ["CloudTrail", "AWS Config", "CloudWatch", "API calls", "configuration", "metrics", "audit"],
+    "hint": "CloudTrail: who called which API (audit). Config: resource configuration history + compliance rules. CloudWatch: metrics, logs, alarms, dashboards."
+  },
+  {
+    "title": "Secrets Manager vs Parameter Store",
+    "terms": ["Secrets Manager", "Parameter Store", "rotate", "rotation", "credentials"],
+    "hint": "Secrets Manager: built-in automatic rotation (RDS/Aurora), cross-Region replication, costs per secret. Parameter Store SecureString: cheap/free config + secrets, no native rotation."
+  }
+]
