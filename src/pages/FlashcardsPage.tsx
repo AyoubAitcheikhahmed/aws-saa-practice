@@ -4,7 +4,8 @@ import { filterQuestions, shuffle, type QuestionFilter } from '../sessions';
 import { getData, recordAnswers, updateProgress, useAppData } from '../storage/store';
 import { ALL_TAGS, DOMAINS } from '../tagging/tagging';
 import type { Domain, Rating } from '../types';
-import { CorrectAnswer, NoteEditor, QuestionHeader, QuestionText, TagList } from '../components/question';
+import { CopyButton, CorrectAnswer, NoteEditor, QuestionHeader, QuestionText, TagList, questionToText } from '../components/question';
+import { buildChoices, seededRandom, withChoices } from '../choices';
 import { Button, Card, PageHeader, ProgressBar, Select, cx } from '../components/ui';
 
 const RATINGS: { rating: Rating; label: string; key: string; className: string }[] = [
@@ -44,7 +45,12 @@ export function FlashcardsPage() {
     setReviewed(0);
   }, [deck]);
 
-  const q = byId.get(deck[index]);
+  const base = byId.get(deck[index]);
+  // Seeded per card so a card always shows the same options in the same order.
+  const q = useMemo(
+    () => (base && !base.options ? withChoices(base, buildChoices(base, questions, seededRandom(`card-${base.id}`))) : base),
+    [base, questions],
+  );
 
   const go = (delta: number) => {
     setIndex((i) => Math.max(0, Math.min(deck.length, i + delta)));
@@ -151,13 +157,17 @@ export function FlashcardsPage() {
                 {q.options && (
                   <ul className="mt-4 space-y-2 text-base md:text-lg">
                     {q.options.map((o) => (
-                      <li key={o.letter}>
-                        <span className="font-semibold">{o.letter}.</span> {o.text}
+                      <li key={o.letter} className="flex gap-2 rounded-md px-2 py-1 ring-1 ring-slate-200 dark:ring-slate-800">
+                        <span className="font-semibold">{o.letter}.</span>
+                        <span>{o.text}</span>
                       </li>
                     ))}
                   </ul>
                 )}
-                <p className="mt-auto pt-6 text-center text-sm text-slate-400">↻ Click or press Space to flip</p>
+                <div className="mt-auto flex items-center justify-between pt-6">
+                  <CopyButton text={questionToText(q, false)} label="Copy question" />
+                  <span className="text-sm text-slate-400">↻ Click or press Space to flip</span>
+                </div>
               </section>
               <section
                 aria-hidden={!flipped}
@@ -168,6 +178,9 @@ export function FlashcardsPage() {
               >
                 <div className="mb-3 flex items-center justify-between text-xs font-semibold uppercase tracking-wide text-indigo-600 dark:text-indigo-400">
                   <span>Answer · #{q.id}</span>
+                  <span className="normal-case tracking-normal">
+                    <CopyButton text={questionToText(q, true)} label="Copy Q&A" />
+                  </span>
                 </div>
                 <p className="mb-4 line-clamp-2 text-sm text-slate-500">{q.text}</p>
                 <div className="rounded-lg bg-emerald-50 p-4 text-lg font-medium ring-1 ring-emerald-200 md:text-xl dark:bg-emerald-950/30 dark:ring-emerald-900">
@@ -175,6 +188,11 @@ export function FlashcardsPage() {
                 </div>
                 {q.explanation && (
                   <p className="mt-4 whitespace-pre-wrap text-base leading-relaxed text-slate-700 dark:text-slate-300">{q.explanation}</p>
+                )}
+                {q.optionsGenerated && (
+                  <p className="mt-3 text-xs text-slate-500">
+                    Wrong options on this card are correct answers from other questions; letters in the explanation refer to the original exam.
+                  </p>
                 )}
                 <div className="mt-4 space-y-3" onClick={(e) => e.stopPropagation()}>
                   <TagList tags={q.tags} />

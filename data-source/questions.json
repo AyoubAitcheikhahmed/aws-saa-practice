@@ -7406,8 +7406,8 @@
       "C",
       "E"
     ],
-    "correctText": "B) Supporting client-side and server-side encryption\nC) Building analytics workloads during specified hours and when the application is not active\nE) Scaling globally to support petabytes of data and tens of millions of requests per minute Amazon Redshift supports encryption for data at rest and in transit, providing security features for sensitive data. This makes it suitable for scenarios where encryption is a requirement.",
-    "explanation": "Amazon Redshift is a fully managed data warehouse service optimized for analytical queries. Running analytics workloads during specified hours aligns with Redshift's strengths, allowing for efficient query processing and analysis.",
+    "correctText": "B) Supporting client-side and server-side encryption\nC) Building analytics workloads during specified hours and when the application is not active\nE) Scaling globally to support petabytes of data and tens of millions of requests per minute",
+    "explanation": "Amazon Redshift supports encryption for data at rest and in transit, providing security features for sensitive data. This makes it suitable for scenarios where encryption is a requirement.\nAmazon Redshift is a fully managed data warehouse service optimized for analytical queries. Running analytics workloads during specified hours aligns with Redshift's strengths, allowing for efficient query processing and analysis.",
     "requiredCount": 3,
     "optionHints": [],
     "warnings": []

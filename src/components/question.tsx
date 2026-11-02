@@ -8,6 +8,54 @@ import { Badge, cx } from './ui';
 
 export const emptyAnswer = (): ExamAnswer => ({ letters: [] });
 
+export function questionToText(q: Question, withAnswer: boolean): string {
+  const parts = [`#${q.id}  ${q.text}`];
+  if (q.options) parts.push(q.options.map((o) => `${o.letter}. ${o.text}`).join('\n'));
+  if (withAnswer) {
+    const correct = q.options
+      ? q.options.filter((o) => q.correct.includes(o.letter)).map((o) => `${o.letter}. ${o.text}`).join('\n')
+      : q.correctText;
+    parts.push(`Answer: ${q.correct.join(', ') || ''}\n${correct}`.trim());
+    if (q.explanation) parts.push(`Explanation: ${q.explanation}`);
+  }
+  return parts.join('\n\n');
+}
+
+export function CopyButton({ text, label = 'Copy' }: { text: string; label?: string }) {
+  const [copied, setCopied] = useState(false);
+  return (
+    <button
+      type="button"
+      title={label}
+      aria-label={label}
+      onClick={async (e) => {
+        e.stopPropagation();
+        await navigator.clipboard.writeText(text);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1500);
+      }}
+      className={cx(
+        'inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium ring-1 transition',
+        copied
+          ? 'bg-emerald-50 text-emerald-700 ring-emerald-300 dark:bg-emerald-950/40 dark:text-emerald-300 dark:ring-emerald-800'
+          : 'text-slate-500 ring-slate-300 hover:bg-slate-100 dark:text-slate-400 dark:ring-slate-700 dark:hover:bg-slate-800',
+      )}
+    >
+      <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+        {copied ? (
+          <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
+        ) : (
+          <>
+            <rect x="9" y="9" width="11" height="11" rx="2" />
+            <path d="M5 15V5a2 2 0 0 1 2-2h10" />
+          </>
+        )}
+      </svg>
+      {copied ? 'Copied' : label}
+    </button>
+  );
+}
+
 export function StarButton({ id }: { id: number }) {
   const data = useAppData();
   const starred = getProgress(data, id).starred;
